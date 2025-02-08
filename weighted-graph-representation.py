@@ -132,7 +132,7 @@ def prims(size: int) -> tuple[list, int]:
     return (mst_edges, mst_weight)
 
 # source = 0
-# print(prims(size))
+# prims(size)
 
 """
 kruskal's algorithm to create MST
@@ -231,4 +231,48 @@ size = 4
 # for (source, dest, weight) in A_weighted:
 #     D_weighted[source].append((weight,dest))
 
-print(kruskal(A_weighted, size))
+"""
+floyd-warshall algorithm (all pairs shortest path)
+
+overview:
+ - init solution matrix with inf
+ - iterate through each node as an intermediate node
+ - for each pair of nodes, check if the path through the intermediate node is shorter than the current shortest path
+ - update the shortest path if it is
+
+time complexity: O(n^3)
+space complexity: O(n^2)
+"""
+
+def floyd_warshall(size: int, graph: list[list[int]]):
+    # init solution matrix with inf
+    solution = [[math.inf] * size for _ in range(size)]
+
+    # init solution matrix with graph
+    for i in range(size):
+        for j in range(size):
+            solution[i][j] = graph[i][j]
+
+    for k in range(size): # intermediate node
+        for i in range(size): # source node
+            for j in range(size): # destination node
+                solution[i][j] = min(solution[i][j], solution[i][k] + solution[k][j])
+
+    return solution
+
+def print_solution(solution: list[list[int]]):
+    for i in range(len(solution)):
+        for j in range(len(solution[i])):
+            if solution[i][j] == math.inf:
+                print("∞", end=" ")
+            else:
+                print(solution[i][j], end=" ")
+        print()
+
+# graph construction
+graph = [[0, 5, math.inf, 10],
+         [math.inf, 0, 3, math.inf],
+         [math.inf, math.inf, 0,   1],
+         [math.inf, math.inf, math.inf, 0]
+         ]
+print_solution(floyd_warshall(4, graph))
