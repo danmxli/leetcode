@@ -1,12 +1,52 @@
+from collections import defaultdict, deque
+from heapq import heappush, heappop, heapify
+import math
+
+"""
+shortest single path between two nodes
+edge weight can only be 0 or 1
+01 bfs yields a time complexity of O(V+E), faster than dijkstra's because it does not use a min-priority queue
+"""
+
+A_weighted = [[0,1,0], [0,7,1], [1,7,1], [1,2,1], [2,3,0], [2,5,0], [2,8,1], [3,4,1], [3,5,1], [4,5,1], [5,6,1], [6,7,1], [7,8,1]]
+# assume undirected, weighted graph
+D_weighted = defaultdict(list)
+for (source, dest, weight) in A_weighted:
+    D_weighted[source].append((weight, dest))
+    D_weighted[dest].append((weight, source))
+
+def weighted_bfs(src: int, v: int):
+    ...
+    weight = [math.inf] * v
+    queue = deque()
+
+    # init from src node
+    weight[src] = 0
+    queue.append((0, src))
+
+    while queue:
+        curr_weight, curr_node = queue.popleft()
+        for (adj_weight, adj_node) in D_weighted[curr_node]:
+            # dijkstra's edge relaxation
+            new_weight = curr_weight + adj_weight
+            if weight[adj_node] > new_weight:
+                weight[adj_node] = new_weight
+
+                # custom implementation of priority queue using double-ended queue
+                # put 0 weight edges to front of queue
+                if adj_weight == 0:
+                    queue.appendleft((adj_weight, adj_node))
+                # put 1 weight edges to back of queue
+                else:
+                    queue.append((adj_weight, adj_node))
+
+weighted_bfs(src=0, v=9)
 
 """
 dijkstra's algorithm
 shortest single path between two nodes
 bfs-like implementation, uses a min-priority queue
 """
-from collections import defaultdict
-from heapq import heappush, heappop, heapify
-import math
 
 # min-priority queue implementation
 class MinPq:
