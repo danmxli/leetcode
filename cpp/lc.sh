@@ -19,7 +19,7 @@ fi
 filename="${1%.*}"
 
 # Compile
-g++ -std=c++17 "$1" -o "$filename"
+g++ -std=c++23 "$1" -o "$filename"
 
 if [ $? -eq 0 ]; then
     # Run the program
